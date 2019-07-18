@@ -1,37 +1,37 @@
-import React from 'react';
-import Search from './Search/Search';
-import Card from './Card/Card';
-import CartDetail from './CartDetails/CartDetails';
+import React, { Component, Fragment } from 'react';
+import Home from './Home/Home';
+import ShoppingCartDetail from './ShpooingCartDetails/ShoppingCartDetail';
+
+import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom';
 
 import './App.css';
 
-class App extends React.Component {
+class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.checkData = this.checkData.bind(this);
-  }
-  state = {
-    seacrhedText: '',
-    cartItems: 0
-  }
-  searchedTextMethod = (event) => {
-    const searchText = event;
-    console.log(searchText);
-    this.setState({ seacrhedText: searchText });
-    console.log(this.state.seacrhedText);
-  }
-  checkData = (event) => {
-    this.cartItems = event;
-    this.setState({ cartItems: event });
-  }
   render() {
+    const style = {
+      float: 'right'
+    }
     return (
-      <div>
-        <CartDetail cartItems={this.state.cartItems} />
-        <Search changed={(event) => this.searchedTextMethod(event)} className="App" />
-        <Card onCartUpdate={(event) => this.checkData(event)} searchedData={this.state.seacrhedText} />
-      </div>
+      <Fragment>
+        <Router>
+          <div>
+            <ul>
+              <li>
+                <NavLink to="/" exact strict activeStyle={
+                  { color: 'red' }
+                }>Home</NavLink>
+              </li>
+              <li style={style}>
+                <NavLink to="/cart" exact strict activeStyle={{ color: 'red' }}>Cart</NavLink>
+              </li>
+
+            </ul>
+          </div>
+          <Route exact strict path="/" component={Home} />
+          <Route exact strict path="/cart" component={ShoppingCartDetail} />
+        </Router>
+      </Fragment>
     );
   }
 }

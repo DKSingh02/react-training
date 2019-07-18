@@ -12,7 +12,7 @@ class Search extends React.Component {
         const searchText = event.target.value;
         this.setState({
             searchText
-        })
+        }, () => this.props.changed(searchText))
     }
     render() {
         return (

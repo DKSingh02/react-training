@@ -7,30 +7,35 @@ import './Card.css';
 class Card extends Component {
     constructor(props) {
         super(props);
-        this.filterData = this.filterData.bind(this);
+        //this.filterData = this.filterData.bind(this);
     }
     state = {
         records: Records,
         cartItems: 0,
         show: false,
-        showDetails: []
+        showDetails: [],
+        searchTerm: ''
     }
     componentDidMount() {
         console.log('data:', this.state.records);
     }
     componentWillReceiveProps(nextProps) {
-        this.filterData(nextProps.searchedData);
+        //this.filterData(nextProps.searchedData);
+        this.setState({ searchTerm: nextProps.searchedData });
         console.log(nextProps);
     }
-    filterData = (searchTerm) => {
-        const searchedTerm = this.props.searchedData || searchTerm;
-        const filteredData = this.state.records.filter((data) => data.name.toLocaleLowerCase().indexOf(searchedTerm.toLocaleLowerCase()) > -1);
-        this.setState({ records: filteredData });
-    }
+    // filterData = (searchTerm) => {
+    //     const searchedTerm = this.props.searchedData || searchTerm;
+    //     //const filteredData = this.state.records.filter((data) => data.name.toLocaleLowerCase().indexOf(searchedTerm.toLocaleLowerCase()) > -1);
+    //     //this.setState({ records: filteredData });
+    // }
     addToCart = () => {
         let count = this.state.cartItems + 1;
         this.setState({ cartItems: count },
             () => this.props.onCartUpdate(this.state.cartItems));
+        
+        // Need to use this code to bind latest updated states later 
+        //this.setState((oldValue) => { this.setState({ cartItems: oldValue + 1 })});
 
     }
 
@@ -51,12 +56,14 @@ class Card extends Component {
         this.setState({ show: false });
     };
     render() {
+        const filteredData = this.state.records.filter((data) => data.name.toLocaleLowerCase().indexOf(this.state.searchTerm.toLocaleLowerCase()) > -1);
+        const showFilterData = filteredData || this.state.records;
         if (this.state.records.length === 0) {
             return <div className="noRecordFound">No Records founds</div>;
         }
         return (
             <div>
-                {this.state.records.map((record, index) => {
+                {showFilterData.map((record, index) => {
                     return (
                         <div className="card"><p>{record.name}</p>
                             <button className='button' onClick={() => this.showModal(index)}>Details</button>
